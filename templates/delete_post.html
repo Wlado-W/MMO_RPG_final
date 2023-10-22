@@ -1,0 +1,25 @@
+{% extends 'default.html' %}
+{% load bootstrap4 %}
+{% block title %}Delete{% endblock title %}
+
+{% block content %}
+    <br>
+    <h3>Удаление объявления:</h3><br>
+
+    {% autoescape off %}
+    <h2>{{ post.title }}</h2>
+    <span>{{ post.text }}<br></span>
+    {% endautoescape %}
+    <hr>
+
+    <span>дата публикации: {{ post.dateCreation|date:'d-M-Y f' }}, ({{ post.author }})</span><br>
+    <span>Категория: {{ post.get_category_display }}</span>
+
+    <br><br>
+
+    <h4>Подтвердите удаление объявления:</h4>
+    <form method="POST">
+    {% csrf_token %}
+    <input type="submit" class="btn btn-secondary" style="background: red" value="подтвердить"></form>
+    <input type=button value="Назад" class="btn btn-secondary" onClick="javascript:history.go(-1);">
+{% endblock content %}

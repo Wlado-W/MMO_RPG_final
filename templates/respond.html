@@ -1,0 +1,15 @@
+{% extends 'default.html' %}
+{% load bootstrap4 %}
+{% block title %}Respond{% endblock title %}
+{% load static %}
+
+{% block content %}
+    <br>
+    <h3>Текст отклика:</h3><br>
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		{% bootstrap_form form layout='horizontal' %}
+		<input class="btn btn-secondary" type="submit" value="Сохранить">
+	</form><br>
+    <input type=button value="Назад" class="btn btn-secondary" onClick="javascript:history.go(-1);">
+{% endblock content %}

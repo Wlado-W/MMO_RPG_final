@@ -1,0 +1,25 @@
+{% extends 'default.html' %}
+
+{% block title %}Ads{% endblock title %}
+
+{% block content %}
+    <br><br>
+    {% if posts %}
+        {% for post in posts %}
+            <a href="/post/{{ post.id }}" style="font-size: 20px;"><b>{{ post.title }}</b></a><br>
+            <span style="font-size: 12px;"><b>Автор:  {{ post.author }} |
+                Дата публикации: {{ post.dateCreation|date:'d.M.Y' }} г.</b></span><br><br>
+
+
+
+        {% endfor %}
+    {% else %}
+        <br><br>
+        <h2>Публикаций нет!</h2>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <br><br><br>
+        <a class="btn btn-secondary" href="{% url 'create_ad' %}" role="button">Добавить новое объявление</a>
+    {% endif %}
+{% endblock content %}

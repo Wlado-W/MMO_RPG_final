@@ -1,0 +1,16 @@
+{% extends 'default.html' %}
+{% load bootstrap4 %}
+{% block title %}Edit{% endblock title %}
+{% load static %}
+
+{% block content %}
+    <br>
+    <h3>Редактирование объявления:</h3><br>
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+		<input class="btn btn-secondary" type="submit" value="Сохранить">
+	</form><br>
+    <input type=button value="Назад" class="btn btn-secondary" onClick="javascript:history.go(-1);">
+{% endblock content %}

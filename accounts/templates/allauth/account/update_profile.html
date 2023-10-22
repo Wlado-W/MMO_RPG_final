@@ -1,0 +1,18 @@
+{% extends 'default.html' %}
+{% load bootstrap4 %}
+{% block title %}Profile update{% endblock %}
+{% block content %}
+
+<br><br>
+<h2>Редактирование профиля:</h2><br>
+
+<form method="post">
+	{% csrf_token %}
+	{% bootstrap_form form layout='horizontal' %}
+	{% buttons submit='Сохранить' %}{% endbuttons %}
+</form>
+
+<a class="btn btn-secondary" href="{% url 'account_profile' %}" role="button">Закрыть</a>
+<a class="btn btn-secondary" href="{% url 'account_logout' %}" role="button">Выйти из аккаунта</a>
+
+{% endblock content %}

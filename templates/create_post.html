@@ -1,0 +1,23 @@
+{% extends 'default.html' %}
+{% load bootstrap4 %}
+{% block title %}Create{% endblock title %}
+{% load static %}
+<!--<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>-->
+<!--<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>-->
+<!--<script src="{{STATIC_URL}}ckeditor/ckeditor.js"></script>-->
+<!--<script src="//cdn.ckeditor.com/4.17.1/full/ckeditor.js"></script>-->
+<!--<script>-->
+<!--  CKEDITOR.replace( '.richtexteditor' );-->
+<!--</script>-->
+{% block content %}
+    <br>
+    <h3>Новое объявление</h3><br>
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+		<input class="btn btn-secondary" type="submit" value="Сохранить">
+	</form><br>
+    <input type=button value="Назад" class="btn btn-secondary" onClick="javascript:history.go(-1);">
+{% endblock content %}
+

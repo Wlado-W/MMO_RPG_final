@@ -1,0 +1,39 @@
+{% extends 'default.html' %}
+{% load bootstrap4 %}
+{% block title %}Profile{% endblock %}
+
+
+{% block content %}
+
+    <br><br>
+    <h3>Ваш профиль: </h3>
+    <br>
+    <h5>User name: {{user.username}}</h5>
+    <h5>Last name: {{user.last_name}}</h5>
+    <h5>First name: {{user.first_name}}</h5>
+    <h5>E-mail: {{user.email}}</h5>
+
+    <br> <br>
+    <a class="btn btn-secondary" href="{% url 'account_edit' %}" role="button">Изменить даные</a>
+    <br><br>
+    <a class="btn btn-secondary" href="{% url 'account_logout' %}" role="button">Выйти из аккаунта</a>
+
+    <br><br><br>
+    {% if auth == False %}
+        <h5>Для завершения регистрации, введите код подтверждения,<br>
+            высланный на указанную Вами электронную почту:</h5><br>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <input class="btn btn-secondary" type="submit" value="Проверить">
+        </form>
+        {% if code_not_correct %}
+            <a style="font-size: 16px; color:red">{{ code_not_correct }}</a><br>
+            <a href="{% url 'auth_code' %}" style="font-size: 16px; color:blue">Выслать новый код</a>
+        {% endif %}
+    {% else %}
+        <h5>Ваша электронная почта подтверждена</h5>
+        <a>Вы можете размещать новые объявления и делать отклики</a><br>
+    {% endif %}
+
+{% endblock %}
