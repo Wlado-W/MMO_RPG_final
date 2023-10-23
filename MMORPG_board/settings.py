@@ -201,7 +201,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = 'media/'  # Путь где хранятся файлы
 MEDIA_URL = '/media/'  # Ссылка по которой будет обращение от основного хоста
 
@@ -217,7 +216,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '91154233370-5ejesbqfusaq1kugtt9qbp7fg2jiqr0k.ap
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 EMAIL_HOST_USER = "zimina.nina202020@yandex.ru"
-# EMAIL_HOST_PASSWORD = "DkjhJsgdaGHjsjjLlkja2133623"
 EMAIL_HOST_PASSWORD = "gtrahytkwiifmkae"
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
@@ -225,7 +223,6 @@ EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
