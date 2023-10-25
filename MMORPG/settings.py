@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',  # Setting for allauth
 
-    'board',
-    'accounts',
+    'MMORPG_Board',
+    'MMORPG_Account',
     'bootstrap4',
     'allauth',  # Setting for allauth
     'allauth.account',  # Setting for allauth
@@ -117,7 +117,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-ROOT_URLCONF = 'MMORPG_board.urls'
+ROOT_URLCONF = 'MMORPG.urls'
 
 TEMPLATES = [
     {
@@ -136,14 +136,14 @@ TEMPLATES = [
 ]
 
 
-# Setting for allauth
+
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 
-# Setting for allauth
+
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
@@ -151,7 +151,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 
-WSGI_APPLICATION = 'MMORPG_board.wsgi.application'
+WSGI_APPLICATION = 'MMORPG.wsgi.application'
 
 
 # Database
@@ -201,8 +201,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
-MEDIA_ROOT = 'media/'  # Путь где хранятся файлы
-MEDIA_URL = '/media/'  # Ссылка по которой будет обращение от основного хоста
+MEDIA_ROOT = 'media/'
+MEDIA_URL = '/media/'
 
 
 

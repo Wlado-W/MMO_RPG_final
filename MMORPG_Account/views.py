@@ -1,28 +1,30 @@
-from django.contrib.auth.models import User, Group
-from django.contrib.auth.mixins import LoginRequiredMixin
+#view.py
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import UpdateView, FormView
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Group, User
+from django.views.generic import CreateView
+
 
 from .models import UsersAuth
-from .forms import EditProfile, Auth_codeForm
+from .forms import EditProfileForm, AuthCodeForm
 import random
-
-
-code_not_correct = str('')
-
 
 class AccountProfile(LoginRequiredMixin, FormView):
     template_name = 'allauth/account/profile.html'
-    form_class = Auth_codeForm
+    form_class = AuthCodeForm
 
     def dispatch(self, request, *args, **kwargs):
-        if UsersAuth.objects.filter(user=self.request.user).exists():
-            return super().dispatch(request, *args, **kwargs)
-        return HttpResponseRedirect(reverse('auth_code'))
+        if request.user.is_authenticated:
+            if UsersAuth.objects.filter(user=self.request.user).exists():
+                return super().dispatch(request, *args, **kwargs)
+            return HttpResponseRedirect(reverse('auth_code'))
+        else:
+            return HttpResponseRedirect(reverse('index'))
 
     def form_valid(self, form, **kwargs):
         global code_not_correct
@@ -40,6 +42,11 @@ class AccountProfile(LoginRequiredMixin, FormView):
         else:
             context['auth'] = False
         return context
+        context['user_group'] = None
+        if self.request.user.is_authenticated:
+            context['user_group'] = self.request.user.groups.first()
+        return context
+
 
 
 @login_required
@@ -56,19 +63,18 @@ def auth_code(request):
     user.code = random.randint(1000, 9999)
     user.save()
     send_mail(
-        subject=f'MMORPG Billboard: подтверждение e-mail',
+        subject='MMORPG Fans: подтверждение e-mail',
         message=f'Доброго дня, {request.user}! Для подтверждения регистрации, введите код {user.code} на '
-                f'странице регистрации\nhttp://127.0.0.1:8000/accounts/profile',
+                f'странице регистрации\nhttp://127.0.0.1:8000/MMORPG_Account/profile',
         from_email='zimina.nina202020@yandex.ru',
         recipient_list=[request.user.email, ],
     )
     return HttpResponseRedirect(reverse('account_profile'))
 
-
 class UpdateProfile(LoginRequiredMixin, UpdateView):
     model = User
-    form_class = EditProfile
-    success_url = '/accounts/profile'
+    form_class = EditProfileForm
+    success_url = '/MMORPG_Account/profile'
     template_name = 'allauth/account/update_profile.html'
 
     def setup(self, request, *args, **kwargs):
@@ -79,3 +85,16 @@ class UpdateProfile(LoginRequiredMixin, UpdateView):
         if not queryset:
           queryset = self.get_queryset()
         return get_object_or_404(queryset, pk=self.user_id)
+
+class RegisterView(CreateView):
+    form_class = EditProfileForm
+    template_name = 'allauth/account/register.html'
+    success_url = '/index/'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = form.instance
+        group = Group.objects.get(name=form.cleaned_data['group'])
+        user.groups.add(group)
+        login(self.request, user)
+        return response

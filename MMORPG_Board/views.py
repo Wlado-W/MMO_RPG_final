@@ -8,7 +8,8 @@ from django.urls import reverse
 
 from .models import Post, Response
 from .forms import PostForm, RespondForm, ResponsesFilterForm
-from .tasks import respond_send_email, respond_accept_send_email
+from .tasks import send_response_email, send_acceptance_email
+
 
 
 class Index(ListView):
@@ -19,7 +20,7 @@ class Index(ListView):
 
 class PostItem(DetailView):
     model = Post
-    template_name = 'post_item.html'
+    template_name = 'publish_item.html'
     context_object_name = 'post'
 
     def get_context_data(self, **kwargs):
@@ -33,11 +34,11 @@ class PostItem(DetailView):
 
 class CreatePost(LoginRequiredMixin, CreateView):
     model = Post
-    template_name = 'create_post.html'
+    template_name = 'create_publication.html'
     form_class = PostForm
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.has_perm('board.add_post'):
+        if not self.request.user.has_perm('MMORG_Board.add_post'):
             return HttpResponseRedirect(reverse('account_profile'))
         return super().dispatch(request, *args, **kwargs)
 
@@ -53,8 +54,8 @@ class CreatePost(LoginRequiredMixin, CreateView):
 
 
 class EditPost(PermissionRequiredMixin, UpdateView):
-    permission_required = 'board.change_post'
-    template_name = 'edit_post.html'
+    permission_required = 'MMORPG_Board.change_post'
+    template_name = 'edit_publication.html'
     form_class = PostForm
     success_url = '/create/'
 
@@ -63,7 +64,7 @@ class EditPost(PermissionRequiredMixin, UpdateView):
         if self.request.user.username == 'admin' or self.request.user.username == author:
             return super().dispatch(request, *args, **kwargs)
         else:
-            return HttpResponse("Редактировать объявление может только его автор")
+            return HttpResponse("Вы не имеете прав для редактирования обьявления!!!!")
 
     def get_object(self, **kwargs):
         id = self.kwargs.get('pk')
@@ -75,8 +76,8 @@ class EditPost(PermissionRequiredMixin, UpdateView):
 
 
 class DeletePost(PermissionRequiredMixin, DeleteView):
-    permission_required = 'board.delete_post'
-    template_name = 'delete_post.html'
+    permission_required = 'MMORPG_Board.delete_post'
+    template_name = 'delete_publication.html'
     queryset = Post.objects.all()
     success_url = '/index'
 
@@ -85,7 +86,7 @@ class DeletePost(PermissionRequiredMixin, DeleteView):
         if self.request.user.username == 'admin' or self.request.user.username == author:
             return super().dispatch(request, *args, **kwargs)
         else:
-            return HttpResponse("Удалить объявление может только его автор")
+            return HttpResponse("Удалять объявление может только его автор")
 
 
 title = str("")
@@ -99,10 +100,7 @@ class Responses(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(Responses, self).get_context_data(**kwargs)
         global title
-        """
-        Далее в условии - если пользователь попал на страницу через ссылку из письма, в которой содержится
-        ID поста для фильтра - фильтр работает по этому ID
-        """
+
         if self.kwargs.get('pk') and Post.objects.filter(id=self.kwargs.get('pk')).exists():
             title = str(Post.objects.get(id=self.kwargs.get('pk')).title)
             print(title)
@@ -120,10 +118,7 @@ class Responses(LoginRequiredMixin, ListView):
     def post(self, request, *args, **kwargs):
         global title
         title = self.request.POST.get('title')
-        """
-        Далее в условии - При событии POST (если в пути открытой страницы есть ID) - нужно перезайти уже без этого ID
-        чтобы фильтр отрабатывал запрос уже из формы, так как ID, если он есть - приоритетный 
-        """
+
         if self.kwargs.get('pk'):
             return HttpResponseRedirect('/responses')
         return self.get(request, *args, **kwargs)
@@ -135,7 +130,7 @@ def response_accept(request, **kwargs):
         response = Response.objects.get(id=kwargs.get('pk'))
         response.status = True
         response.save()
-        respond_accept_send_email.delay(response_id=response.id)
+        send_acceptance_email.delay(response_id=response.id)
         return HttpResponseRedirect('/responses')
     else:
         return HttpResponseRedirect('/accounts/login')
@@ -165,7 +160,7 @@ class Respond(LoginRequiredMixin, CreateView):
         respond.author = User.objects.get(id=self.request.user.id)
         respond.post = Post.objects.get(id=self.kwargs.get('pk'))
         respond.save()
-        respond_send_email.delay(respond_id=respond.id)
+        send_response_email.delay(respond_id=respond.id)
         return redirect(f'/post/{self.kwargs.get("pk")}')
 
 

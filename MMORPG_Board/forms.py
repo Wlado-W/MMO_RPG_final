@@ -1,7 +1,6 @@
 from django import forms
 from .models import Post, Response
 
-
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -14,7 +13,6 @@ class PostForm(forms.ModelForm):
         self.fields['title'].label = "Заголовок"
         self.fields['text'].label = "Текст объявления:"
 
-
 class RespondForm(forms.ModelForm):
     class Meta:
         model = Response
@@ -23,7 +21,6 @@ class RespondForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RespondForm, self).__init__(*args, **kwargs)
         self.fields['text'].label = "Текст отклика:"
-
 
 class ResponsesFilterForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
@@ -34,3 +31,4 @@ class ResponsesFilterForm(forms.Form):
             empty_label="Все",
             required=False
         )
+        self.fields['title'].label = "Объявление"
