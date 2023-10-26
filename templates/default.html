@@ -10,7 +10,7 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
 
-        <title>MMORPG_board— {% block title %} {% endblock title %}</title>
+        <title>Доска обьявлений MMORPG {% block title %} {% endblock title %}</title>
 
         <!-- Bootstrap core CSS -->
         <link
@@ -19,7 +19,7 @@
         />
         <style>
           body {
-            background-color: khaki; /* Измените на нужный вам цвет */
+            background-color: khaki;
           }
         </style>
     </head>
@@ -28,7 +28,7 @@
         <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
     <div class="container">
-        <a class="navbar-brand" href="/">Доска объявлений известной MMORPG</a>
+        <a class="navbar-brand" href="/">Доска объявлений MMORPG</a>
 
         <button
             class="navbar-toggler"
@@ -56,7 +56,7 @@
                             Личный кабинет
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{% url 'account_profile' %}">Профиль</a>
+                            <a class="dropdown-item" href="{% url 'profile_accounts' %}">Профиль</a>
                             <a class="dropdown-item" href="{% url 'account_logout' %}">Выйти</a>
                         </div>
                     </li>

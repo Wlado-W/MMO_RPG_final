@@ -1,9 +1,8 @@
 #forms.py
 from django import forms
-from django.contrib.auth.models import User
 from .models import UserProfile
-from django.contrib.auth.models import Group
-from .models import UsersAuth
+from django.contrib.auth.models import User
+
 
 
 
@@ -30,8 +29,12 @@ class EditProfileForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+class EditUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'username', 'email']
 
-class AuthCodeForm(forms.Form):
+class AuthVerifiCodeForm(forms.Form):
     code = forms.IntegerField(label="Код регистрации")
 
 

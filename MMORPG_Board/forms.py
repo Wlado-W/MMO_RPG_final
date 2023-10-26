@@ -1,25 +1,31 @@
 from django import forms
 from .models import Post, Response
 
-class PostForm(forms.ModelForm):
+class BaseForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(BaseForm, self).__init__(*args, **kwargs)
+        self.setup_labels()
+
+    def setup_labels(self):
+        pass
+
+class PostForm(BaseForm):
     class Meta:
         model = Post
         widgets = {'title': forms.TextInput(attrs={'size': '100'})}
         fields = ('category', 'title', 'text',)
 
-    def __init__(self, *args, **kwargs):
-        super(PostForm, self).__init__(*args, **kwargs)
+    def setup_labels(self):
         self.fields['category'].label = "Категория:"
         self.fields['title'].label = "Заголовок"
         self.fields['text'].label = "Текст объявления:"
 
-class RespondForm(forms.ModelForm):
+class RespondForm(BaseForm):
     class Meta:
         model = Response
         fields = ('text',)
 
-    def __init__(self, *args, **kwargs):
-        super(RespondForm, self).__init__(*args, **kwargs)
+    def setup_labels(self):
         self.fields['text'].label = "Текст отклика:"
 
 class ResponsesFilterForm(forms.Form):
